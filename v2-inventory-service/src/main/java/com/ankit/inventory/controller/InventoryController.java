@@ -1,5 +1,6 @@
 package com.ankit.inventory.controller;
 
+import com.ankit.inventory.dto.InventoryStatusDTO;
 import com.ankit.inventory.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,7 @@ public class InventoryController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public boolean isInStock(@RequestParam String skuCode, @RequestParam Integer quantity) {
+    public InventoryStatusDTO isInStock(@RequestParam String skuCode, @RequestParam Integer quantity) {
         return inventoryService.isInStock(skuCode, quantity);
     }
 }
