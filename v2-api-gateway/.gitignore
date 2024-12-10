@@ -34,3 +34,4 @@ build/
 
 #custom
 src/test
+mysql/
