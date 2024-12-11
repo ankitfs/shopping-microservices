@@ -14,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -21,6 +22,9 @@ public class SecurityConfiguration {
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    private JwtAuthFilter jwtAuthFilter;
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
@@ -38,13 +42,19 @@ public class SecurityConfiguration {
                 //Set Permissions on Endpoints
                 .authorizeHttpRequests(auth -> auth
                         //public endpoints
-                        .requestMatchers(HttpMethod.POST, "/api/auth/register/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/login/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/auth/test/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+//                      .requestMatchers(HttpMethod.GET, "/api/test").permitAll()
+//                      .requestMatchers(HttpMethod.GET, "/api/inventory").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/free").permitAll()
+//                      .requestMatchers(HttpMethod.GET, "/api/order").permitAll()
                         //private endpoints
                         .anyRequest().authenticated()
                 )
                 .authenticationManager(authenticationManager)
+
+                //add JWT Token Filter
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
